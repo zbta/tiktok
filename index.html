@@ -1,0 +1,81 @@
+<!--yes i used ai whatchu gonna do about it-->
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Character Transformer</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:#0d1117;display:flex;justify-content:center;align-items:center;min-height:100vh;font-family:Segoe UI,sans-serif;padding:20px}
+.container{background:#161b22;border-radius:16px;padding:40px;max-width:700px;width:100%;border:1px solid #30363d}
+h1{color:#f0f6fc;font-size:24px;font-weight:600;margin-bottom:24px}
+label{display:block;color:#c9d1d9;font-weight:500;font-size:14px;margin-bottom:8px}
+textarea{width:100%;padding:14px 16px;background:#0d1117;border:1px solid #30363d;border-radius:10px;color:#e6edf3;font-size:16px;font-family:monospace;resize:vertical;min-height:100px;outline:none}
+textarea:focus{border-color:#58a6ff}
+.btn-row{display:flex;gap:12px;margin-top:16px;flex-wrap:wrap}
+button{padding:12px 28px;border:none;border-radius:10px;font-size:15px;font-weight:600;cursor:pointer;flex:1;min-width:120px}
+.btn-primary{background:#238636;color:#fff}
+.btn-primary:hover{background:#2ea043}
+.btn-secondary{background:#21262d;color:#c9d1d9;border:1px solid #30363d}
+.btn-secondary:hover{background:#30363d}
+.btn-copy{background:#1f6feb;color:#fff}
+.btn-copy:hover{background:#388bfd}
+.output-section{margin-top:28px;padding-top:24px;border-top:1px solid #30363d}
+.output-label{color:#8b949e;font-size:13px;font-weight:500;display:flex;justify-content:space-between}
+.output-box{margin-top:8px;padding:14px 16px;background:#0d1117;border:1px solid #30363d;border-radius:10px;color:#e6edf3;font-size:18px;font-family:monospace;min-height:60px;word-break:break-all;line-height:1.8;white-space:pre-wrap}
+.output-box .placeholder{color:#484f58}
+.toast{position:fixed;bottom:30px;left:50%;transform:translateX(-50%) translateY(80px);background:#238636;color:#fff;padding:12px 28px;border-radius:10px;font-weight:500;font-size:14px;opacity:0;transition:.4s;pointer-events:none}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+@media(max-width:500px){.container{padding:24px}.btn-row{flex-direction:column}button{min-width:unset}}
+</style>
+</head>
+<body>
+
+<div class=container>
+<h1>TikTok Bypasser</h1>
+<label for=i>Enter your text:</label>
+<textarea id=i placeholder="Type something here..."></textarea>
+<div class=btn-row>
+<button class=btn-primary id=t>⚡ Transform</button>
+<button class=btn-copy id=c>📋 Copy Result</button>
+<button class=btn-secondary id=r>✕ Clear</button>
+</div>
+<div class=output-section>
+<div class=output-label><span>Result</span><span id=count>0 characters</span></div>
+<div class=output-box id=o><span class=placeholder>(transformed text appears here)</span></div>
+</div>
+</div>
+
+<div class=toast id=toast>✓ Copied!</div>
+
+<script>
+const m={e:'е',y:'у',o:'о',p:'р',a:'а',l:'I',x:'х',c:'с'};
+const s=0xFFF0,e=0xFFF8;
+const r=(a,b)=>Math.floor(Math.random()*(b-a+1))+a;
+const f=()=>String.fromCharCode(r(s,e));
+const x=t=>{let o='';for(let i=0;i<t.length;i++){o+=t[i];let n=r(0,4);for(let j=0;j<n;j++)o+=f()}return o};
+const sub=t=>{let o='';for(let i=0;i<t.length;i++)o+=m[t[i]]||t[i];return o};
+const transform=t=>t?x(sub(t)):'';
+
+const inp=document.getElementById('i');
+const out=document.getElementById('o');
+const cnt=document.getElementById('count');
+const tBtn=document.getElementById('t');
+const cBtn=document.getElementById('c');
+const rBtn=document.getElementById('r');
+const toast=document.getElementById('toast');
+let last='';
+
+const upd=t=>{last=t;if(t){out.innerHTML=t;cnt.textContent=t.length+' characters'}else{out.innerHTML='<span class=placeholder>(transformed text appears here)</span>';cnt.textContent='0 characters'}};
+
+const show=(msg,bg='#238636')=>{toast.textContent=msg;toast.style.background=bg;toast.classList.add('show');clearTimeout(toast.t);toast.t=setTimeout(()=>toast.classList.remove('show'),2500)};
+
+tBtn.onclick=()=>upd(transform(inp.value));
+cBtn.onclick=()=>{if(!last){show('Nothing to copy!','#d29922');return}navigator.clipboard.writeText(last).then(()=>show('✓ Copied!')).catch(()=>{const a=document.createElement('textarea');a.value=last;document.body.appendChild(a);a.select();document.execCommand('copy');document.body.removeChild(a);show('✓ Copied!')})};
+rBtn.onclick=()=>{inp.value='';upd('');inp.focus()};
+inp.onkeydown=e=>{if(e.key=='Enter'&&(e.ctrlKey||e.metaKey)){e.preventDefault();upd(transform(inp.value))}};
+inp.value='';upd(transform(inp.value));
+</script>
+</body>
+</html>
